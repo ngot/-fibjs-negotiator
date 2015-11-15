@@ -1,53 +1,54 @@
 
 var assert = require('assert')
 var Negotiator = require('..')
+var negotiator
 
 describe('negotiator.mediaType()', function () {
   whenAccept(undefined, function () {
     it('should return */*', function () {
-      assert.strictEqual(this.negotiator.mediaType(), '*/*')
+      assert.strictEqual(negotiator.mediaType(), '*/*')
     })
   })
 
   whenAccept('*/*', function () {
     it('should return */*', function () {
-      assert.strictEqual(this.negotiator.mediaType(), '*/*')
+      assert.strictEqual(negotiator.mediaType(), '*/*')
     })
   })
 
   whenAccept('application/json', function () {
     it('should return application/json', function () {
-      assert.deepEqual(this.negotiator.mediaType(), 'application/json')
+      assert.deepEqual(negotiator.mediaType(), 'application/json')
     })
   })
 
   whenAccept('application/json;q=0', function () {
     it('should return undefined', function () {
-      assert.strictEqual(this.negotiator.mediaType(), undefined)
+      assert.strictEqual(negotiator.mediaType(), undefined)
     })
   })
 
   whenAccept('application/json;q=0.2, text/html', function () {
     it('should return text/html', function () {
-      assert.deepEqual(this.negotiator.mediaType(), 'text/html')
+      assert.deepEqual(negotiator.mediaType(), 'text/html')
     })
   })
 
   whenAccept('text/*', function () {
     it('should return text/*', function () {
-      assert.strictEqual(this.negotiator.mediaType(), 'text/*')
+      assert.strictEqual(negotiator.mediaType(), 'text/*')
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, */*;q=0.1', function () {
     it('should return text/plain', function () {
-      assert.strictEqual(this.negotiator.mediaType(), 'text/plain')
+      assert.strictEqual(negotiator.mediaType(), 'text/plain')
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, text/xml, text/yaml, text/javascript, text/csv, text/css, text/rtf, text/markdown, application/octet-stream;q=0.2, */*;q=0.1', function () {
     it('should return text/plain', function () {
-      assert.strictEqual(this.negotiator.mediaType(), 'text/plain')
+      assert.strictEqual(negotiator.mediaType(), 'text/plain')
     })
   })
 })
@@ -55,72 +56,72 @@ describe('negotiator.mediaType()', function () {
 describe('negotiator.mediaType(array)', function () {
   whenAccept(undefined, function () {
     it('should return first item in list', function () {
-      assert.strictEqual(this.negotiator.mediaType(['text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/html']), 'application/json')
+      assert.strictEqual(negotiator.mediaType(['text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/html']), 'application/json')
     })
   })
 
   whenAccept('*/*', function () {
     it('should return first item in list', function () {
-      assert.strictEqual(this.negotiator.mediaType(['text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/html']), 'application/json')
+      assert.strictEqual(negotiator.mediaType(['text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/html']), 'application/json')
     })
   })
 
   whenAccept('application/json', function () {
     it('should be case insensitive', function () {
-      assert.strictEqual(this.negotiator.mediaType(['application/JSON']), 'application/JSON')
+      assert.strictEqual(negotiator.mediaType(['application/JSON']), 'application/JSON')
     })
 
     it('should only return application/json', function () {
-      assert.strictEqual(this.negotiator.mediaType(['text/html']), undefined)
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'application/json')
+      assert.strictEqual(negotiator.mediaType(['text/html']), undefined)
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'application/json')
     })
   })
 
   whenAccept('application/json;q=0', function () {
     it('should return undefined', function () {
-      assert.strictEqual(this.negotiator.mediaType(), undefined)
+      assert.strictEqual(negotiator.mediaType(), undefined)
     })
   })
 
   whenAccept('application/json;q=0.2, text/html', function () {
     it('should prefer text/html over application/json', function () {
-      assert.strictEqual(this.negotiator.mediaType(['application/json']), 'application/json')
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['application/json']), 'application/json')
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'text/html')
     })
   })
 
   whenAccept('text/*', function () {
     it('should prefer text media types', function () {
-      assert.strictEqual(this.negotiator.mediaType(['application/json']), undefined)
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['application/json']), undefined)
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'text/html')
     })
   })
 
   whenAccept('text/*, text/plain;q=0', function () {
     it('should prefer text media types', function () {
-      assert.strictEqual(this.negotiator.mediaType(['application/json']), undefined)
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['text/html', 'application/json']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['application/json']), undefined)
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['text/html', 'application/json']), 'text/html')
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, */*;q=0.1', function () {
     it('should return in preferred order', function () {
-      assert.strictEqual(this.negotiator.mediaType(['application/json', 'text/plain', 'text/html']), 'text/plain')
-      assert.strictEqual(this.negotiator.mediaType(['image/jpeg', 'text/html']), 'text/html')
-      assert.strictEqual(this.negotiator.mediaType(['image/jpeg', 'image/gif']), 'image/jpeg')
+      assert.strictEqual(negotiator.mediaType(['application/json', 'text/plain', 'text/html']), 'text/plain')
+      assert.strictEqual(negotiator.mediaType(['image/jpeg', 'text/html']), 'text/html')
+      assert.strictEqual(negotiator.mediaType(['image/jpeg', 'image/gif']), 'image/jpeg')
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, text/xml, text/yaml, text/javascript, text/csv, text/css, text/rtf, text/markdown, application/octet-stream;q=0.2, */*;q=0.1', function () {
     it('should return the client-preferred order', function () {
-      assert.strictEqual(this.negotiator.mediaType(['text/plain', 'text/html', 'text/xml', 'text/yaml', 'text/javascript', 'text/csv', 'text/css', 'text/rtf', 'text/markdown', 'application/json', 'application/octet-stream']),
+      assert.strictEqual(negotiator.mediaType(['text/plain', 'text/html', 'text/xml', 'text/yaml', 'text/javascript', 'text/csv', 'text/css', 'text/rtf', 'text/markdown', 'application/json', 'application/octet-stream']),
         'text/plain')
     })
   })
@@ -129,7 +130,7 @@ describe('negotiator.mediaType(array)', function () {
 describe('negotiator.mediaTypes()', function () {
   whenAccept(undefined, function () {
     it('should return */*', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['*/*'])
+      assert.deepEqual(negotiator.mediaTypes(), ['*/*'])
     })
   })
 
@@ -141,55 +142,55 @@ describe('negotiator.mediaTypes()', function () {
 
   whenAccept('application/json', function () {
     it('should return application/json', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['application/json'])
+      assert.deepEqual(negotiator.mediaTypes(), ['application/json'])
     })
   })
 
   whenAccept('application/json;q=0', function () {
     it('should return empty list', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), [])
+      assert.deepEqual(negotiator.mediaTypes(), [])
     })
   })
 
   whenAccept('application/json;q=0.2, text/html', function () {
     it('should return text/html, application/json', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/html', 'application/json'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/html', 'application/json'])
     })
   })
 
   whenAccept('text/*', function () {
     it('should return text/*', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/*'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/*'])
     })
   })
 
   whenAccept('text/*, text/plain;q=0', function () {
     it('should return text/*', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/*'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/*'])
     })
   })
 
   whenAccept('text/html;LEVEL=1', function () {
     it('should return text/html;LEVEL=1', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/html'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/html'])
     })
   })
 
   whenAccept('text/html;foo="bar,text/css;";fizz="buzz,5", text/plain', function () {
     it('should return text/html, text/plain', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/html', 'text/plain'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/html', 'text/plain'])
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, */*;q=0.1', function () {
     it('should return text/plain, text/html, application/json, */*', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/plain', 'text/html', 'application/json', '*/*'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/plain', 'text/html', 'application/json', '*/*'])
     })
   })
 
   whenAccept('text/plain, application/json;q=0.5, text/html, text/xml, text/yaml, text/javascript, text/csv, text/css, text/rtf, text/markdown, application/octet-stream;q=0.2, */*;q=0.1', function () {
     it('should return the client-preferred order', function () {
-      assert.deepEqual(this.negotiator.mediaTypes(), ['text/plain', 'text/html', 'text/xml', 'text/yaml', 'text/javascript', 'text/csv', 'text/css', 'text/rtf', 'text/markdown', 'application/json', 'application/octet-stream', '*/*'])
+      assert.deepEqual(negotiator.mediaTypes(), ['text/plain', 'text/html', 'text/xml', 'text/yaml', 'text/javascript', 'text/csv', 'text/css', 'text/rtf', 'text/markdown', 'application/json', 'application/octet-stream', '*/*'])
     })
   })
 })
@@ -474,13 +475,13 @@ function createRequest(headers) {
 
 function mediaTypesNegotiated(serverTypes, preferredTypes) {
   return function () {
-    assert.deepEqual(this.negotiator.mediaTypes(serverTypes), preferredTypes)
+    assert.deepEqual(negotiator.mediaTypes(serverTypes), preferredTypes)
   }
 }
 
 function mediaTypesPreferred(preferredTypes) {
   return function () {
-    assert.deepEqual(this.negotiator.mediaTypes(), preferredTypes)
+    assert.deepEqual(negotiator.mediaTypes(), preferredTypes)
   }
 }
 
@@ -491,7 +492,7 @@ function whenAccept(accept, func) {
 
   describe(description, function () {
     before(function () {
-      this.negotiator = Negotiator(createRequest({'Accept': accept}))
+      negotiator = Negotiator(createRequest({'Accept': accept}))
     })
 
     func()
